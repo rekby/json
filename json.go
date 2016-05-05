@@ -4,6 +4,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"encoding/json"
 )
 
 type Json struct {
@@ -37,6 +38,15 @@ func FromJson(js interface{}) *Json {
 		log.Printf("Json FromJson unknown type '%v'", v)
 	}
 	return res
+}
+
+func Parse(data []byte) (*Json, error){
+	var js interface{}
+	err := json.Unmarshal(data, &js)
+	if err != nil {
+		return nil, err
+	}
+	return FromJson(js), nil
 }
 
 func (this *Json) A(name string) []*Json {

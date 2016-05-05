@@ -2,16 +2,17 @@ package json
 
 import (
 	"testing"
-	"encoding/json"
 )
 
 func TestSimpleValuesJson(t *testing.T){
-	var js interface{}
+	var err error
 	var j *Json
 
 	// 0
-	json.Unmarshal([]byte(`0`), &js)
-	j = FromJson(js)
+	j, err = Parse([]byte(`0`))
+	if err != nil {
+		t.Error(err)
+	}
 	if j.Av() == nil || len(j.Av()) != 0 {
 		t.Error()
 	}
@@ -33,10 +34,15 @@ func TestSimpleValuesJson(t *testing.T){
 	if j.Sv() != "0" {
 		t.Error()
 	}
+	if j.IsNullv() == true {
+		t.Error()
+	}
 
 	// true
-	json.Unmarshal([]byte(`true`), &js)
-	j = FromJson(js)
+	j, err = Parse([]byte(`true`))
+	if err != nil {
+		t.Error(err)
+	}
 	if j.Av() == nil || len(j.Av()) != 0 {
 		t.Error()
 	}
@@ -58,10 +64,15 @@ func TestSimpleValuesJson(t *testing.T){
 	if j.Sv() != "true"{
 		t.Error()
 	}
+	if j.IsNullv() == true {
+		t.Error()
+	}
 
 	// false
-	json.Unmarshal([]byte(`false`), &js)
-	j = FromJson(js)
+	j, err = Parse([]byte(`false`))
+	if err != nil {
+		t.Error(err)
+	}
 	if j.Av() == nil || len(j.Av()) != 0 {
 		t.Error()
 	}
@@ -83,10 +94,15 @@ func TestSimpleValuesJson(t *testing.T){
 	if j.Sv() != "false"{
 		t.Error()
 	}
+	if j.IsNullv() == true {
+		t.Error()
+	}
 
 	// string
-	json.Unmarshal([]byte(`"asd"`), &js)
-	j = FromJson(js)
+	j, err = Parse([]byte(`"asd"`))
+	if err != nil {
+		t.Error(err)
+	}
 	if j.Av() == nil || len(j.Av()) != 0 {
 		t.Error()
 	}
@@ -108,10 +124,15 @@ func TestSimpleValuesJson(t *testing.T){
 	if j.Sv() != "asd"{
 		t.Error()
 	}
+	if j.IsNullv() == true {
+		t.Error()
+	}
 
-	// string
-	json.Unmarshal([]byte(`null`), &js)
-	j = FromJson(js)
+	// null
+	j, err = Parse([]byte(`null`))
+	if err != nil {
+		t.Error(err)
+	}
 	if j.Av() == nil || len(j.Av()) != 0 {
 		t.Error()
 	}
@@ -133,14 +154,16 @@ func TestSimpleValuesJson(t *testing.T){
 	if j.Sv() != ""{
 		t.Error()
 	}
+	if j.IsNullv() != true {
+		t.Error()
+	}
 }
 
 func TestArrJson(t *testing.T){
-	var js interface{}
-	var j *Json
-
-	json.Unmarshal([]byte(`[1,2,"asd",true,null, "null"]`), &js)
-	j = FromJson(js)
+	j, err := Parse([]byte(`[1,2,"asd",true,null, "null"]`))
+	if err != nil {
+		t.Error(err)
+	}
 	arr := j.Av()
 	if len(arr) != 6 {
 		t.Error()
@@ -166,11 +189,10 @@ func TestArrJson(t *testing.T){
 }
 
 func TestObjJson(t *testing.T){
-	var js interface{}
-	var j *Json
-
-	json.Unmarshal([]byte(`{"asd":123,"vvv":"test", "null":123}`), &js)
-	j = FromJson(js)
+	j, err := Parse([]byte(`{"asd":123,"vvv":"test", "null":123}`))
+	if err != nil {
+		t.Error(err)
+	}
 	arr := j.Av()
 	if len(arr) != 0 {
 		t.Error()
