@@ -9,7 +9,7 @@ func TestSimpleValuesJson(t *testing.T){
 	var j *Json
 
 	// 0
-	j, err = Parse([]byte(`0`))
+	j, err = Unmarshal([]byte(`0`))
 	if err != nil {
 		t.Error(err)
 	}
@@ -39,7 +39,7 @@ func TestSimpleValuesJson(t *testing.T){
 	}
 
 	// true
-	j, err = Parse([]byte(`true`))
+	j, err = Unmarshal([]byte(`true`))
 	if err != nil {
 		t.Error(err)
 	}
@@ -69,7 +69,7 @@ func TestSimpleValuesJson(t *testing.T){
 	}
 
 	// false
-	j, err = Parse([]byte(`false`))
+	j, err = Unmarshal([]byte(`false`))
 	if err != nil {
 		t.Error(err)
 	}
@@ -99,7 +99,7 @@ func TestSimpleValuesJson(t *testing.T){
 	}
 
 	// string
-	j, err = Parse([]byte(`"asd"`))
+	j, err = Unmarshal([]byte(`"asd"`))
 	if err != nil {
 		t.Error(err)
 	}
@@ -129,7 +129,7 @@ func TestSimpleValuesJson(t *testing.T){
 	}
 
 	// null
-	j, err = Parse([]byte(`null`))
+	j, err = Unmarshal([]byte(`null`))
 	if err != nil {
 		t.Error(err)
 	}
@@ -160,7 +160,7 @@ func TestSimpleValuesJson(t *testing.T){
 }
 
 func TestArrJson(t *testing.T){
-	j, err := Parse([]byte(`[1,2,"asd",true,null, "null"]`))
+	j, err := Unmarshal([]byte(`[1,2,"asd",true,null, "null"]`))
 	if err != nil {
 		t.Error(err)
 	}
@@ -189,7 +189,7 @@ func TestArrJson(t *testing.T){
 }
 
 func TestObjJson(t *testing.T){
-	j, err := Parse([]byte(`{"asd":123,"vvv":"test", "null":123}`))
+	j, err := Unmarshal([]byte(`{"asd":123,"vvv":"test", "null":123}`))
 	if err != nil {
 		t.Error(err)
 	}

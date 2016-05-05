@@ -40,7 +40,7 @@ func FromJson(js interface{}) *Json {
 	return res
 }
 
-func Parse(data []byte) (*Json, error){
+func Unmarshal(data []byte) (*Json, error){
 	var js interface{}
 	err := json.Unmarshal(data, &js)
 	if err != nil {
