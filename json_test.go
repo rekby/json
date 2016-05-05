@@ -139,10 +139,10 @@ func TestArrJson(t *testing.T){
 	var js interface{}
 	var j *Json
 
-	json.Unmarshal([]byte(`[1,2,"asd",true,null]`), &js)
+	json.Unmarshal([]byte(`[1,2,"asd",true,null, "null"]`), &js)
 	j = FromJson(js)
 	arr := j.Av()
-	if len(arr) != 5 {
+	if len(arr) != 6 {
 		t.Error()
 	}
 	if arr[0].Iv()!= 1 {
@@ -158,6 +158,30 @@ func TestArrJson(t *testing.T){
 		t.Error()
 	}
 	if arr[4].Jv().val != nil {
+		t.Error()
+	}
+	if arr[5].Sv() != "null" {
+		t.Error()
+	}
+}
+
+func TestObjJson(t *testing.T){
+	var js interface{}
+	var j *Json
+
+	json.Unmarshal([]byte(`{"asd":123,"vvv":"test", "null":123}`), &js)
+	j = FromJson(js)
+	arr := j.Av()
+	if len(arr) != 0 {
+		t.Error()
+	}
+	if j.I("asd") != 123 {
+		t.Error()
+	}
+	if j.S("vvv")!= "test"{
+		t.Error()
+	}
+	if j.I("null") != 123 {
 		t.Error()
 	}
 }
