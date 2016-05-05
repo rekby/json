@@ -40,6 +40,128 @@ func FromJson(js interface{}) *Json {
 	return res
 }
 
+func (this *Json) ToJson() interface{}{
+	if this == nil {
+		log.Println("Json nil ToJson")
+		return nil
+	}
+	if this.m != nil {
+		res := make(map[string]interface{})
+		for k, v := range this.m {
+			res[k] = v.ToJson()
+		}
+		return res
+	}
+	if this.val == nil {
+		return nil
+	}
+
+	switch v := this.val.(type) {
+	case bool,float64,string:
+		return v
+	case []*Json:
+		arr := make([]interface{}, len(v))
+		for i := range v {
+			arr[i] = v[i].ToJson()
+		}
+		return arr
+	default:
+		log.Printf("Json unknow type ToJson '%v'\n", v)
+		return nil
+	}
+}
+
+func (this *Json) Equal(other *Json)bool {
+	if this == nil && other == nil {
+		return true
+	}
+	if this == nil || other == nil {
+		return false
+	}
+
+	if this.m == nil && this.val == nil && other.m == nil && other.val == nil {
+		return true
+	}
+
+	if this.m != nil && other.m != nil {
+		if len(this.m) != len(other.m){
+			return false
+		}
+		for k, v := range this.m{
+			if otherv, ok := other.m[k]; ok {
+				if !v.Equal(otherv) {
+					return false
+				}
+			} else {
+				return false
+			}
+		}
+		return true
+	}
+
+	if this.val != nil && other.val != nil {
+		switch v := this.val.(type) {
+		case bool:
+			if ov, ok := other.val.(bool); ok && v == ov {
+				return true
+			} else {
+				return false
+			}
+		case float64:
+			if ov, ok := other.val.(float64); ok && v == ov {
+				return true
+			} else {
+				return false
+			}
+		case string:
+			if ov, ok := other.val.(string); ok && v == ov {
+				return true
+			} else {
+				return false
+			}
+		case []*Json:
+			if ov, ok := other.val.([]*Json); ok {
+				if len(v) != len(ov){
+					return false
+				}
+				for i := range v {
+					if !v[i].Equal(ov[i]) {
+						return false
+					}
+				}
+				return true
+ 			} else {
+				return false
+			}
+		default:
+			log.Printf("Json compare unknow type '%v'\n", v)
+			return false
+		}
+	}
+
+	return false
+}
+
+func (this *Json) Marshal() []byte {
+	j := this.ToJson()
+	res, err := json.Marshal(j)
+	if err != nil {
+		log.Println("Json err while Marshal:", err)
+		return nil
+	}
+	return res
+}
+
+func (this *Json) MarshalIdent(prefix, ident string) []byte {
+	j := this.ToJson()
+	res, err := json.MarshalIndent(j, prefix, ident)
+	if err != nil {
+		log.Println("Json err while MarshalIdent:", err)
+		return nil
+	}
+	return res
+}
+
 func Unmarshal(data []byte) (*Json, error){
 	var js interface{}
 	err := json.Unmarshal(data, &js)
