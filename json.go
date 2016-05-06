@@ -288,12 +288,16 @@ func (this *Json) Iv() int {
 }
 
 func (this *Json) IsNull(name string) bool {
-	return this.J(name).IsNullv()
+	if this == nil {
+		log.Println("Json isnull on nil object")
+		return false
+	}
+	return this.m == nil || this.m[name] == nil
 }
 
 func (this *Json) IsNullv() bool {
 	if this == nil {
-		log.Println("Json isnull on nil object")
+		log.Println("Json isnullv on nil object")
 		return false
 	}
 	return this.val == nil && this.m == nil
