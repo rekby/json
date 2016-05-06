@@ -253,6 +253,40 @@ func (this *Json) Fv() float64 {
 	}
 }
 
+func (this *Json) I64(name string) int64 {
+	return this.J(name).I64v()
+}
+
+func (this *Json) I64v() int64 {
+	if this == nil {
+		log.Println("Json cast nil to int")
+		return 0
+	}
+	switch v := this.val.(type) {
+	case bool:
+		if v {
+			return 1
+		} else {
+			return 0
+		}
+	case float64:
+		return int64(v)
+	case string:
+		val, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			log.Printf("Json can't strconv to int: '%v'\n", v)
+			return 0
+		}
+		return val
+	case nil:
+		log.Println("Json cast nil val to int")
+		return 0
+	default:
+		log.Printf("Json can't cast to int: '%v'\n", v)
+		return 0
+	}
+}
+
 func (this *Json) I(name string) int {
 	return this.J(name).Iv()
 }
